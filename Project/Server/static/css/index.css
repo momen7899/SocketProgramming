@@ -1,0 +1,9 @@
+body {
+    background-color: cornflowerblue;
+}
+
+.title {
+    color: purple;
+    font-size: 7rem;
+    font-family: monospace;
+}
