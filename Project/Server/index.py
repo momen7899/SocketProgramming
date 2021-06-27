@@ -1,40 +1,40 @@
 from flask import Flask, render_template, request
-from flask_mysqldb import MySQL
+# from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
 import hashlib
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'mochat'
-mysql = MySQL(app)
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_DB'] = 'mochat'
+# mysql = MySQL(app)
 socketio = SocketIO(app)
 
 
 @app.route('/')
 def login():
-    return render_template("login.html")
+    return render_template("index1.html")
 
 
-@app.route('/chat/', methods=['POST', 'GET'])
-def chat():
-    if request.method == 'GET':
-        return render_template("login.html")
-    elif request.method == 'POST':
-        name = request.form['username']
-        md = md5(request.form['pass'])
-        cursor = mysql.connection.cursor()
-        cursor.execute(
-            ''' SELECT id from user WHERE user_name = %s AND password = %s''', (name, md))
-        mysql.connection.commit()
-        if (cursor.rowcount >= 1):
-            cursor.close()
-            return render_template("index1.html")
-
-        cursor.close()
-        return "There Is No such a User"
+# @app.route('/chat/', methods=['POST', 'GET'])
+# def chat():
+#     if request.method == 'GET':
+#         return render_template("index1.html")
+#     elif request.method == 'POST':
+#         name = request.form['username']
+#         md = md5(request.form['pass'])
+#         cursor = mysql.connection.cursor()
+#         cursor.execute(
+#             ''' SELECT id from user WHERE user_name = %s AND password = %s''', (name, md))
+#         mysql.connection.commit()
+#         if (cursor.rowcount >= 1):
+#             cursor.close()
+#             return render_template("index1.html")
+#
+#         cursor.close()
+#         return "There Is No such a User"
 
 
 def md5(password):
