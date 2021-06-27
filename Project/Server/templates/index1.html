@@ -3,52 +3,92 @@
 
 <head>
     <title>MoChat</title>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/css/util.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <!--===============================================================================================-->
 </head>
 
 <body>
 
-    <div class="chat">
+    <div class="container-login100" style="background-image: url('../static/images/bg-01.jpg');">
+        <div class="wrap-login100">
+            <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+            <div class="message_holder" style="height: auto; overflow-y: scroll; color: #fff;max-height: 400px;"></div>
 
-        <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
-        <div class="message_holder"></div>
+            <form class="login100-form validate-form mt-5" action="/chat/" method="POST">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="wrap-input100 validate-input" data-validate="Message...">
+                            <input class="input100 message" type="text" placeholder="" autofocus>
+                            <span class="focus-input100" data-placeholder="Message..."></span>
+                        </div>
+                    </div>
 
-        <form action="" method="POST">
-            <input type="text" class="username" placeholder="User Name" />
-            <input type="text" class="message" placeholder="Messages" />
-            <input type="submit" />
-        </form>
-
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-
-        <script type="text/javascript">
-            var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-            socket.on('connect', function() {
-                socket.emit('my event', {
-                    data: 'User Connected'
-                })
-                var form = $('form').on('submit', function(e) {
-                    e.preventDefault()
-                    let user_name = $('input.username').val()
-                    let user_input = $('input.message').val()
-                    socket.emit('my event', {
-                        user_name: user_name,
-                        message: user_input
-                    })
-                    $('input.message').val('').focus()
-                })
-            })
-            socket.on('my response', function(msg) {
-                console.log(msg)
-                if (typeof msg.user_name !== 'undefined') {
-                    $('h3').remove()
-                    $('div.message_holder').append('<div><b style="color: #000">' + msg.user_name + '</b> ' + msg.message + '</div>')
-                }
-            })
-        </script>
+                    <div class="col-lg-3">
+                        <div class="container-login100-form-btn">
+                            <button class="login100-form-btn" type="submit" style="height: 43px !important;margin-top:5px;">
+                            Send
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('connect', function() {
+            const userName = '{{ name }}';
+
+            socket.emit('my event', {
+                user_name: userName,
+                message: 'Joined To Chat',
+                data: 'joined'
+            })
+
+            var form = $('form').on('submit', function(e) {
+                e.preventDefault()
+                let user_input = $('input.message').val()
+                socket.emit('my event', {
+                    user_name: userName,
+                    message: user_input
+                })
+                $('input.message').val('').focus()
+            })
+        })
+        socket.on('my response', function(msg) {
+            console.log(msg)
+            if (typeof msg.user_name !== 'undefined') {
+                $('h3').remove()
+                if (msg.data === 'joined') {
+                    $('div.message_holder').append('<div style="text-align: center;"><b style="color: #000">' + msg.user_name + '</b> ' + msg.message + '</div>')
+                } else {
+                    $('div.message_holder').append('<div><b style="color: #cfd8dc">' + msg.user_name + '</b> ' + msg.message + '</div>')
+                }
+            }
+        })
+    </script>
 
 </body>
 

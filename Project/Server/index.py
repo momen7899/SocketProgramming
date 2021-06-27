@@ -29,9 +29,10 @@ def chat():
         cursor.execute(
             ''' SELECT id from user WHERE user_name = %s AND password = %s''', (name, md))
         mysql.connection.commit()
-        if (cursor.rowcount >= 1):
+        if cursor.rowcount >= 1:
             cursor.close()
-            return render_template("index1.html")
+            name = name + ":\t"
+            return render_template("index1.html", name=name)
 
         cursor.close()
         return "There Is No such a User"
@@ -53,4 +54,4 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
