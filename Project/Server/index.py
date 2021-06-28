@@ -32,7 +32,7 @@ def chat():
         if cursor.rowcount >= 1:
             cursor.close()
             name = name + ":\t"
-            return render_template("index1.html", name=name)
+            return render_template("index.html", name=name)
 
         cursor.close()
         return "There Is No such a User"
