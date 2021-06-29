@@ -52,12 +52,6 @@ def chat():
             cursor.close()
             return redirect("http://127.0.0.1:5000/")
 
-
-@app.route('/user/register', methods=['POST', 'GET'])
-def register():
-    print(request.form['sign-btn'])
-
-
 def md5(password):
     md5 = hashlib.md5(password.encode()).hexdigest()
     return md5
