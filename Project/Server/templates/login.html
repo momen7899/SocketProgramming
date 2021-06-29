@@ -29,6 +29,20 @@
 </head>
 
 <body>
+
+    {% with messages = get_flashed_messages() %}
+	{% if messages %}
+    		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    		<script>
+       			let messages = {{ messages | safe }};
+		        for (let i=0; i<messages.length; i++) {
+               			swal({
+        		         title: "Message!", text: messages[i], button: "Got it", timer:50000
+	               		}).show();
+		        }
+		 </script>
+    	{% endif %} 
+    {% endwith %}
     <div class="limiter">
         <div class="container-login100" style="background-image: url('../static/images/bg-01.jpg');">
             <div class="wrap-login100">
@@ -52,21 +66,20 @@
                     </div>
 
                     <div class="container-login100-form-btn">
-                        <button class="login100-form-btn" type="submit" style="margin-right: 50px;">
-                                Login
-                            </button>
-                        <button class="login100-form-btn" type="sign">
-                                Sign up
-                               </button>
+                        <button class="login100-form-btn" name="submit" value="login" type="submit" style="margin-right: 50px;">
+                        Login
+                    </button>
+                        <button class="login100-form-btn" name="submit" value="sign" type="submit">
+                        Sign up
+                    </button>
                     </div>
-
 
 
                     <div class="text-center p-t-90">
                         <a class="txt1" href="#">
-							Created By Mo`men Hamaveisi
-							9717023118
-						</a>
+                        Created By Mo`men Hamaveisi
+                        9717023118
+                    </a>
                     </div>
 
                 </form>
