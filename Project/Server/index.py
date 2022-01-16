@@ -1,7 +1,16 @@
-from flask import Flask, redirect, render_template, flash, request
+import hashlib
+from dataclasses import dataclass
+
+from flask import Flask, redirect, render_template, flash, request, jsonify
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
-import hashlib
+
+
+@dataclass
+class User:
+    id: int
+    name: str
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
@@ -16,6 +25,12 @@ socketio = SocketIO(app)
 @app.route('/')
 def login():
     return render_template("login.html")
+
+
+@app.route('/home')
+def home():
+    print("Home")
+    return render_template("home.html")
 
 
 @app.route('/chat/', methods=['POST', 'GET'])
@@ -52,6 +67,7 @@ def chat():
             cursor.close()
             return redirect("http://127.0.0.1:5000/")
 
+
 def md5(password):
     md5 = hashlib.md5(password.encode()).hexdigest()
     return md5
@@ -67,5 +83,44 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     socketio.emit('my response', json, callback=messageReceived)
 
 
+@app.route('/api/login')
+def loginApi():
+    name = request.values['username']
+    md = md5(request.values['password'])
+    cursor = mysql.connection.cursor()
+    cursor.execute(''' SELECT * from user WHERE user_name = %s AND password = %s''', (name, md))
+    mysql.connection.commit()
+    records = cursor.fetchall()
+
+    id = 0
+    userName = "Not found"
+
+    for row in records:
+        id = row[0]
+        userName = row[1]
+    cursor.close()
+
+    return jsonify(
+        id=id,
+        userName=userName,
+    )
+
+
+@app.route('/api/getUsers')
+def getUserApi():
+    cursor = mysql.connection.cursor()
+    cursor.execute(''' SELECT * from user ''')
+    mysql.connection.commit()
+    records = cursor.fetchall()
+
+    users = []
+
+    for row in records:
+        users.append(User(row[0], row[1]))
+
+    cursor.close()
+    return jsonify(users)
+
+
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, port=5000, debug=True)

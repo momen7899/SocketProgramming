@@ -1,15 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     $("h1").addClass("title");
 
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-    socket.on('connect', function() {
+    socket.on('connect', function () {
         console.log("Log");
         socket.emit('my event', {
             data: 'User Connected'
         })
-        var form = $('form').on('submit', function(e) {
+        var form = $('form').on('submit', function (e) {
             e.preventDefault()
             let user_name = $('input.username').val()
             let user_input = $('input.message').val()
@@ -21,7 +21,7 @@ $(document).ready(function() {
         })
     })
 
-    socket.on('my response', function(msg) {
+    socket.on('my response', function (msg) {
         console.log(msg)
         if (typeof msg.user_name !== 'undefined') {
             $('div.message_holder').append('<div><b style="color:#000">' + msg.user_name + '</b>' + msg.message + '</div>')
