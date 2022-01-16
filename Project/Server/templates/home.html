@@ -6,6 +6,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <h>Momen Hamaveisi</h>
+<h>List of Users you can choose</h>
+<div class="user_holder">
+    <p onclick="itemClicked(0 )">Group</p>
+</div>
+
+<script>
+    let baseUrl = 'http://' + document.domain + ':' + location.port
+    let url = baseUrl + '/api/getUsers'
+
+    $.ajax({
+        url: url,
+        type: 'get',
+        success: function (response) {
+            response.forEach(function (user) {
+                console.log(user)
+                $('div.user_holder').append('<p onclick="itemClicked(' + user.id + ')">' + user.name + '</p>')
+            })
+        },
+        error: function () {
+            alert("Username or password is wrong:(");
+        }
+    });
+
+    function itemClicked(id) {
+        console.log(id)
+    }
+
+</script>
+
 </body>
 </html>

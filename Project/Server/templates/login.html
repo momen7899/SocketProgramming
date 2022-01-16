@@ -98,12 +98,8 @@
 
 <script>
     function login() {
-        console.log("Start");
         let userName = document.getElementById("userName").value;
         let password = document.getElementById("password").value;
-
-        console.log(userName);
-        console.log(password);
 
         let baseUrl = 'http://' + document.domain + ':' + location.port
         let url = baseUrl + '/api/login?username=' + userName + '&password=' + password
@@ -112,16 +108,12 @@
             url: url,
             type: 'get',
             success: function (response) {
-                console.log(baseUrl + "/home")
                 location.replace(baseUrl + "/home")
             },
             error: function () {
-                console.log(url)
                 alert("Username or password is wrong:(");
             }
         });
-
-        console.log("Finish");
     }
 
     function signUp() {
