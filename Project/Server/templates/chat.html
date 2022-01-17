@@ -32,7 +32,7 @@
         <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
         <div class="message_holder" style="height: auto; overflow-y: scroll; color: #fff;max-height: 400px;"></div>
 
-        <form class="login100-form validate-form mt-5" action="/chat/" method="POST">
+        <form class="login100-form validate-form mt-5">
             <div class="row">
                 <div class="col-lg-9">
                     <div class="wrap-input100 validate-input" data-validate="Message...">
@@ -56,10 +56,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 
 <script type="text/javascript">
-    let socket = io.connect('http://' + document.domain + ':' + location.port);
+    const senderId = {{ senderId }};
+    const senderName = {{ senderName }};
+    const receiverId = {{ receiverId }};
+    const receiverName = {{ receiverName }};
+
+    let param = "?senderId=" + senderId + "&senderName=" + senderName +
+        "&receiverId=" + receiverId + "&receiverName=" + receiverName
+
+
+    let socket = io.connect('http://' + document.domain + ':' + location.port + "/chat?" + param);
 
     socket.on('connect', function () {
-        const userName = '{{ name }}';
+        const userName = '{{ senderName }}';
         console.log("on")
         console.log(userName)
         socket.emit('my event', {

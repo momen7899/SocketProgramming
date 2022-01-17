@@ -36,8 +36,18 @@ def home():
 
 @app.route('/chat', methods=['POST', 'GET'])
 def chat():
-    print(request.values)
-    return render_template("chat.html")
+    if request.method == 'GET':
+        senderId = request.values['senderId']
+        senderName = request.values['senderName']
+        receiverId = request.values['receiverId']
+        receiverName = request.values['receiverName']
+        return render_template("chat.html", senderId=senderId, senderName=senderName,
+                               receiverId=receiverId, receiverName=receiverName)
+
+
+@app.route('/chatSocket')
+def chatSocket():
+    print("chatSocket")
 
 
 def md5(password):

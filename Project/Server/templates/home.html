@@ -31,8 +31,7 @@
 
 <script>
     function itemClicked(id, name) {
-        alert('item clicked')
-        let param = "?senderId={{ id }}&senderName={{ userName }}&receiverId" + id + "&receiverName=" + name + ""
+        let param = "?senderId={{ id }}&senderName={{ userName }}&receiverId=" + id + "&receiverName=" + name + ""
         console.log(id)
         console.log(name)
         location.replace(baseUrl + "/chat" + param)
