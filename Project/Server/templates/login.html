@@ -103,12 +103,11 @@
 
         let baseUrl = 'http://' + document.domain + ':' + location.port
         let url = baseUrl + '/api/login?username=' + userName + '&password=' + password
-
         $.ajax({
             url: url,
             type: 'get',
             success: function (response) {
-                location.replace(baseUrl + "/home")
+                location.replace(baseUrl + "/home?id="+response.id+"&username="+response.username)
             },
             error: function () {
                 alert("Username or password is wrong:(");
