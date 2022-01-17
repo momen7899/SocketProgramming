@@ -5,32 +5,37 @@
     <meta charset="UTF-8"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body>
+<>
 <h>List of Users you can choose</h>
-<div class="user_holder">
-    <p onclick="itemClicked(0 )">Group</p>
-</div>
+<ul class="user_holder">
+    <button onclick="itemClicked(-1,'')">Group</button>
+</ul>
 
 <script>
     let baseUrl = 'http://' + document.domain + ':' + location.port
-    let url = baseUrl + '/api/getUsers'
+    let url = baseUrl + '/api/getUsers?userId={{ id }}'
 
     $.ajax({
         url: url,
         type: 'get',
         success: function (response) {
             response.forEach(function (user) {
-                console.log(user)
-                $('div.user_holder').append('<p onclick="itemClicked(' + user.id + ')">' + user.name + '</p>')
+                $('ul.user_holder').append(`<button onclick="itemClicked(${user.id},${user.username})">${user.username}</button>`)
             })
         },
         error: function () {
-            alert("Username or password is wrong:(");
+            alert("Couldn`t load items:(");
         }
     });
+</script>
 
-    function itemClicked(id) {
+<script>
+    function itemClicked(id, name) {
+        alert('item clicked')
+        let param = "?senderId={{ id }}&senderName={{ userName }}&receiverId" + id + "&receiverName=" + name + ""
         console.log(id)
+        console.log(name)
+        location.replace(baseUrl + "/chat" + param)
     }
 
 </script>

@@ -1,7 +1,7 @@
 import hashlib
 from dataclasses import dataclass
 
-from flask import Flask, redirect, render_template, flash, request, jsonify
+from flask import Flask, render_template, request, jsonify
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO
 
@@ -9,7 +9,7 @@ from flask_socketio import SocketIO
 @dataclass
 class User:
     id: int
-    name: str
+    username: str
 
 
 app = Flask(__name__)
@@ -19,7 +19,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'mochat'
 mysql = MySQL(app)
-socketio = SocketIO(app)
+socketIo = SocketIO(app)
 
 
 @app.route('/')
@@ -29,43 +29,15 @@ def login():
 
 @app.route('/home')
 def home():
-    print("Home")
-    return render_template("home.html")
+    userId = request.values['id']
+    userName = request.values['username']
+    return render_template("home.html", id=userId, userName=userName)
 
 
-@app.route('/chat/', methods=['POST', 'GET'])
+@app.route('/chat', methods=['POST', 'GET'])
 def chat():
-    if request.method == 'GET':
-        return redirect("http://127.0.0.1:5000/")
-    elif request.method == 'POST':
-        name = request.form['username']
-        md = md5(request.form['pass'])
-        cursor = mysql.connection.cursor()
-        if request.form['submit'] == 'login':
-            cursor.execute(
-                ''' SELECT id from user WHERE user_name = %s AND password = %s''', (name, md))
-            mysql.connection.commit()
-            if cursor.rowcount >= 1:
-                cursor.close()
-                name = name + ":"
-                return render_template("index.html", name=name)
-            cursor.close()
-            flash("There is no such a user")
-            return redirect("http://127.0.0.1:5000/")
-        elif request.form['submit'] == 'sign':
-            try:
-                cursor.execute(
-                    ''' INSERT INTO user  (user_name, password) VALUES (%s, %s)''', (name, md))
-                mysql.connection.commit()
-            except:
-                flash("User Name has been used.\nChoose another one")
-                return redirect("http://127.0.0.1:5000/")
-            if cursor.rowcount >= 1:
-                flash("User Successfully Added")
-            else:
-                flash("Data Error Please Try Again")
-            cursor.close()
-            return redirect("http://127.0.0.1:5000/")
+    print(request.values)
+    return render_template("chat.html")
 
 
 def md5(password):
@@ -73,14 +45,14 @@ def md5(password):
     return md5
 
 
-def messageReceived(methods=['GET', 'POST']):
+def messageReceived():
     print('message was received!!!')
 
 
-@socketio.on('my event')
-def handle_my_custom_event(json, methods=['GET', 'POST']):
+@socketIo.on('my event')
+def handle_my_custom_event(json):
     print('received my event: ' + str(json))
-    socketio.emit('my response', json, callback=messageReceived)
+    socketIo.emit('my response', json, callback=messageReceived)
 
 
 @app.route('/api/login')
@@ -92,24 +64,21 @@ def loginApi():
     mysql.connection.commit()
     records = cursor.fetchall()
 
-    id = 0
-    userName = "Not found"
+    user = (0, "NotFound!")
 
     for row in records:
-        id = row[0]
-        userName = row[1]
+        user = User(row[0], row[1])
     cursor.close()
 
-    return jsonify(
-        id=id,
-        userName=userName,
-    )
+    return jsonify(user)
 
 
 @app.route('/api/getUsers')
 def getUserApi():
+    userId = request.values['userId']
     cursor = mysql.connection.cursor()
-    cursor.execute(''' SELECT * from user ''')
+
+    cursor.execute(''' SELECT * FROM user WHERE id != %s''', str(userId))
     mysql.connection.commit()
     records = cursor.fetchall()
 
@@ -123,4 +92,4 @@ def getUserApi():
 
 
 if __name__ == '__main__':
-    socketio.run(app, port=5000, debug=True)
+    socketIo.run(app, port=5000, debug=True)
