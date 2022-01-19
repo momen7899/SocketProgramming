@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from flask import Flask, render_template, request, jsonify
 from flask_mysqldb import MySQL
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send
 
 
 @dataclass
@@ -40,14 +40,8 @@ def chat():
         senderId = request.values['senderId']
         senderName = request.values['senderName']
         receiverId = request.values['receiverId']
-        receiverName = request.values['receiverName']
         return render_template("chat.html", senderId=senderId, senderName=senderName,
-                               receiverId=receiverId, receiverName=receiverName)
-
-
-@app.route('/chatSocket')
-def chatSocket():
-    print("chatSocket")
+                               receiverId=receiverId)
 
 
 def md5(password):
@@ -59,10 +53,9 @@ def messageReceived():
     print('message was received!!!')
 
 
-@socketIo.on('my event')
-def handle_my_custom_event(json):
-    print('received my event: ' + str(json))
-    socketIo.emit('my response', json, callback=messageReceived)
+@socketIo.on('message')
+def handleMessage(msg):
+    send(msg, broadcast=True)
 
 
 @app.route('/api/login')
