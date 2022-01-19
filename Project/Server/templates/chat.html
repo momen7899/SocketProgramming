@@ -39,7 +39,7 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="wrap-input100 validate-input" data-validate="Message...">
-                        <input class="input100 message" type="text" placeholder="" autofocus>
+                        <input id="editText" class="input100 message" type="text" placeholder="" autofocus>
                         <span class="focus-input100" data-placeholder="Message..."></span>
                     </div>
                 </div>
@@ -58,13 +58,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
-        const senderId = {{ senderId }};
-        const senderName = '{{ senderName }}';
-        const receiverId = {{ receiverId }};
-
         let socket = io.connect('http://' + document.domain + ':' + location.port);
+        const senderId = sessionStorage.getItem("senderId");
+        const senderName = sessionStorage.getItem("senderName");
+        const receiverId = sessionStorage.getItem("receiverId");
 
+        console.log(senderId)
+        console.log(senderName)
+        console.log(receiverId)
         socket.on('connect', function () {
             let data = {
                 sender: senderName,
@@ -77,13 +78,28 @@
         })
         socket.on('message', function (msg) {
             console.log(JSON.stringify(msg))
-
-            if (msg.receiverId === -1) {
+            console.log(msg.receiverId === "-1")
+            console.log(msg.receiverId === senderId)
+            if (msg.receiverId === "-1") {
                 showMessage(msg)
             } else if (msg.receiverId === senderId) {
                 showMessage(msg)
+            } else {
+                console.log("Not Define User")
             }
+        })
 
+        $('form').on('submit', function (event) {
+            event.preventDefault()
+            let data = {
+                sender: senderName,
+                receiverId: receiverId,
+                message: document.getElementById("editText").value,
+                data: 'send Message'
+            }
+            console.log('submit: ' + JSON.stringify(data))
+            socket.send(data);
+            document.getElementById("editText").value = "";
         })
 
         function showMessage(msg) {

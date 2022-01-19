@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Home</title>
     <meta charset="UTF-8"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<>
+<body>
 <h>List of Users you can choose</h>
 <ul class="user_holder">
     <button onclick="itemClicked(-1,'')">Group</button>
@@ -13,7 +13,9 @@
 
 <script>
     let baseUrl = 'http://' + document.domain + ':' + location.port
-    let url = baseUrl + '/api/getUsers?userId={{ id }}'
+    let senderId = sessionStorage.getItem("id");
+    let senderName = sessionStorage.getItem("username")
+    let url = baseUrl + '/api/getUsers?userId=' + senderId
 
     $.ajax({
         url: url,
@@ -24,20 +26,21 @@
             })
         },
         error: function () {
-            alert("Couldn`t load items:(");
+            alert("Couldn't load items:(");
         }
     });
-</script>
 
-<script>
     function itemClicked(id, name) {
-        let param = "?senderId={{ id }}&senderName={{ userName }}&receiverId=" + id;
         console.log(id)
         console.log(name)
-        location.replace(baseUrl + "/chat" + param)
-    }
 
+        sessionStorage.setItem("senderId", senderId);
+        sessionStorage.setItem("senderName", senderName);
+        sessionStorage.setItem("receiverId", id);
+        location.replace(baseUrl + "/chat")
+    }
 </script>
+
 
 </body>
 </html>

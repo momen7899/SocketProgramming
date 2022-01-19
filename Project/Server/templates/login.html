@@ -1,6 +1,6 @@
 <html lang="en">
 
-<head>
+<head lang="en">
     <title>Login MoChat</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,7 +58,7 @@
                             style="margin-right: 50px;">
                         Login
                     </button>
-                    <button class="login100-form-btn" onclick="signUp()" name="submit" value="sign" type="submit">
+                    <button class="login100-form-btn" onclick="signUp()" value="sign">
                         Sign up
                     </button>
                 </div>
@@ -93,10 +93,10 @@
 <!--===============================================================================================-->
 <script src="../static/vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-<script src="../static/js/main.js"></script>
 
 
-<script>
+<script type="text/javascript">
+
     function login() {
         let userName = document.getElementById("userName").value;
         let password = document.getElementById("password").value;
@@ -107,7 +107,9 @@
             url: url,
             type: 'get',
             success: function (response) {
-                location.replace(baseUrl + "/home?id="+response.id+"&username="+response.username)
+                sessionStorage.setItem("id", response.id);
+                sessionStorage.setItem("username", response.username);
+                location.replace(baseUrl + "/home")
             },
             error: function () {
                 alert("Username or password is wrong:(");
@@ -116,7 +118,26 @@
     }
 
     function signUp() {
-
+        let userName = document.getElementById("userName").value;
+        let password = document.getElementById("password").value;
+        let data = {
+            userName: userName,
+            password: password
+        }
+        let url = baseUrl + '/api/register'
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            success: function () {
+                alert("Use add successfully!:)")
+                document.getElementById("userName").value = "";
+                document.getElementById("password").value = "";
+            },
+            error: function () {
+                alert("Something happen please try again:(");
+            }
+        });
     }
 </script>
 </body>

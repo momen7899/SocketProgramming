@@ -29,19 +29,13 @@ def login():
 
 @app.route('/home')
 def home():
-    userId = request.values['id']
-    userName = request.values['username']
-    return render_template("home.html", id=userId, userName=userName)
+    return render_template("home.html")
 
 
 @app.route('/chat', methods=['POST', 'GET'])
 def chat():
     if request.method == 'GET':
-        senderId = request.values['senderId']
-        senderName = request.values['senderName']
-        receiverId = request.values['receiverId']
-        return render_template("chat.html", senderId=senderId, senderName=senderName,
-                               receiverId=receiverId)
+        return render_template("chat.html")
 
 
 def md5(password):
@@ -76,6 +70,25 @@ def loginApi():
     return jsonify(user)
 
 
+@app.route('/api/register', methods=['POST'])
+def singUpApi():
+    print("register")
+    print(request.form)
+    name = request.form['username']
+    md = md5(request.form['password'])
+    cursor = mysql.connection.cursor()
+    cursor.execute('''INSERT INTO user(user_name, password) VALUES(%s, %s)''', (name, md))
+    mysql.connection.commit()
+
+    user = (name, md)
+
+    if cursor.rowcount > 0:
+        user = User(0, name)
+    cursor.close()
+
+    return jsonify(user)
+
+
 @app.route('/api/getUsers')
 def getUserApi():
     userId = request.values['userId']
@@ -95,4 +108,4 @@ def getUserApi():
 
 
 if __name__ == '__main__':
-    socketIo.run(app, port=5000, debug=True)
+    socketIo.run(app, port=80, debug=True)
