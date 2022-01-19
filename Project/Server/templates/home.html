@@ -3,13 +3,45 @@
 <head>
     <title>Home</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../static/css/util.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <!--===============================================================================================-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<h>List of Users you can choose</h>
-<ul class="user_holder">
-    <button onclick="itemClicked(-1)">Group</button>
-</ul>
+
+<div class="container-login100" style="background-image: url('../static/images/bg-01.jpg');">
+    <div class="wrap-login100">
+        <h>List of Users you can choose:</h>
+        <div class="user_holder" style="height: auto; overflow-y: scroll; color: #fff;max-height: 400px;">
+            <button class="login100-form-btn" onclick="itemClicked(-1)"
+                    style="height: 40px !important;margin-top:5px; align-content: center">
+                GROUP
+            </button>
+
+        </div>
+    </div>
+</div>
 
 <script>
     let baseUrl = 'http://' + document.domain + ':' + location.port
@@ -22,7 +54,7 @@
         type: 'get',
         success: function (response) {
             response.forEach(function (user) {
-                $('ul.user_holder').append(`<button onclick="itemClicked(${user.id})">${user.username}</button>`)
+                $('div.user_holder').append(`<button class="login100-form-btn" onclick="itemClicked(${user.id})  style="height: 40px !important;margin-top:5px;">${user.username}</button>`)
             })
         },
         error: function () {
