@@ -69,6 +69,7 @@
         socket.on('connect', function () {
             let data = {
                 sender: senderName,
+                senderId: senderId,
                 receiverId: receiverId,
                 message: ' has connected!',
                 data: 'joined'
@@ -80,7 +81,7 @@
             console.log(JSON.stringify(msg))
             console.log(msg.receiverId === "-1")
             console.log(msg.receiverId === senderId)
-            if (msg.receiverId === "-1") {
+            if (msg.receiverId === receiverId) {
                 showMessage(msg)
             } else if (msg.receiverId === senderId) {
                 showMessage(msg)

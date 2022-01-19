@@ -8,7 +8,7 @@
 <body>
 <h>List of Users you can choose</h>
 <ul class="user_holder">
-    <button onclick="itemClicked(-1,'')">Group</button>
+    <button onclick="itemClicked(-1)">Group</button>
 </ul>
 
 <script>
@@ -22,7 +22,7 @@
         type: 'get',
         success: function (response) {
             response.forEach(function (user) {
-                $('ul.user_holder').append(`<button onclick="itemClicked(${user.id},${user.username})">${user.username}</button>`)
+                $('ul.user_holder').append(`<button onclick="itemClicked(${user.id})">${user.username}</button>`)
             })
         },
         error: function () {
@@ -30,9 +30,8 @@
         }
     });
 
-    function itemClicked(id, name) {
+    function itemClicked(id) {
         console.log(id)
-        console.log(name)
 
         sessionStorage.setItem("senderId", senderId);
         sessionStorage.setItem("senderName", senderName);
