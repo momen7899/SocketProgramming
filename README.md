@@ -1,7 +1,7 @@
 
-# Welcome to MoChat!
+# MoChat!
 
-Hi! this project is a sample of web socket programming chat by using python flask as a backend and html, CSS ,... for front end and for api we use ajex lib.
+MoChat is a sample of web socket programming chat by using python flask as a backend and html, CSS ,... for front end and for api we use ajex lib.
 
 
 ![login page](https://github.com/momen7899/SocketProgramming/blob/master/Project/Image/login%20page.png)
